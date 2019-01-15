@@ -1,0 +1,19 @@
+.Card {
+    width: 80%;
+    margin: 5px auto;
+    border: 1px solid #888;
+    border-radius: 15px;
+    background-image: radial-gradient(ellipse farthest-corner at left top,rgb(103, 103, 103) 1.1%,rgb(135, 135, 135) 65.8%,rgb(103, 103, 103) 100%);
+}
+
+.Card > div {
+    width: 70%;
+    display: inline-block;
+}
+.Card img {
+    width: 29%;
+    display: inline-block;
+    vertical-align: top;
+    padding: 5px;
+}
+
