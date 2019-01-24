@@ -8,9 +8,11 @@ class Want extends Component {
     render(){
         return (
             <div className={classes.Want}>
+                <div>
                 <h1>Хочу шаурму</h1>
                 <Button><NavLink to={'/all'}>Все</NavLink></Button>
                 <Button><NavLink to={'/near'}>Рядом</NavLink></Button>
+                </div>
             </div>
         )
     }

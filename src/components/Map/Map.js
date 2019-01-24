@@ -1,24 +1,28 @@
 import React from 'react';
 import classes from './Map.css';
 import { Map, Marker } from 'yandex-map-react';
+import Loader from '../../components/UI/Loader/Loader';
 
 
 
 class ContactMap extends React.Component{    
   state={
-    coordinates: []
+    coordinates: [],
+    loading: true
   }
+  
 
   markerClickHandler(){
     alert("Dczjkgjhg")
   }
 
+ 
   geocode(ymaps) {
     const coordinates=[];
     let coords = []; 
       this.props.adress.map(async (item, index)=>{
       await ymaps.geocode(item)
-      .then((result) => {  coordinates[index] =  result.geoObjects.get(0).geometry.getCoordinates()})
+      .then(result => { coordinates[index] =  result.geoObjects.get(0).geometry.getCoordinates()})
         coords.push(coordinates[index])
         this.setState({coordinates: coords})
       return true            
@@ -33,10 +37,18 @@ class ContactMap extends React.Component{
 
     return markers;
   }
-  
+  componentDidMount(){
+    this.setState({
+      loading: false
+    })
+  }  
+
   render () {  
     console.log(this.state)  
-    return (          
+    return (
+      this.state.loading ?
+      <Loader />
+      :          
       <div className={classes.Map}>                             
         <Map
         minWidth="100px" 

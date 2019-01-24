@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import classes from './Near.css';
 import ContactMap from '../../components/Map/Map';
-import Loader from '../../components/UI/Loader/Loader';
+
 
 class Near extends Component {
     state = {
@@ -16,23 +16,11 @@ class Near extends Component {
             'Нижний Тагил, ул. Газетная, 1',
             'Нижний Тагил, ул. Калинина, 1'
 
-        ],
-        loading: true
+        ]
     }
-    coords = () => {
-    
+    coords = () => {    
          function error(errorCode) {
-            var msg = "";
-            switch (errorCode) {
-              case 1: msg = "Нет разрешения"; // Пользователь не дал разрешения на определение местоположения
-                break;
-              case 2: msg = "Техническая ошибка";
-                break;
-              case 3: msg = "Превышено время ожидания";
-                break;
-              default: msg = "Что то случилось не так";
-           }
-            alert(msg);
+            alert("Произошла ошибка!");
          }
         navigator.geolocation.getCurrentPosition((position)=>{
             this.setState({
@@ -44,16 +32,9 @@ class Near extends Component {
     componentWillMount(){
         this.coords();
     }  
-    componentDidMount(){
-        this.setState({
-          loading: false
-        })
-      }  
+    
     render(){  
-        return (  
-            this.state.loading ?
-            <Loader />
-                :                          
+        return (                         
             <div className={classes.Near}>            
             <h1>Рядом</h1>            
                 <ContactMap 
