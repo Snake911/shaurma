@@ -9,7 +9,10 @@ class ContactMap extends React.Component{
     coordinates: []
   }
 
-  
+  markerClickHandler(){
+    alert("Dczjkgjhg")
+  }
+
   geocode(ymaps) {
     const coordinates=[];
     let coords = []; 
@@ -23,10 +26,9 @@ class ContactMap extends React.Component{
  
   console.log(this.state)
   }
-  renderMarkers() {
-    
+  renderMarkers() {    
     const markers = this.state.coordinates.map((item, index) => {
-     return (<Marker key={index} lat={item[0]} lon={item[1]} />)
+     return (<Marker onClick={this.markerClickHandler} key={index} lat={item[0]} lon={item[1]} />)
     })
 
     return markers;
@@ -36,8 +38,10 @@ class ContactMap extends React.Component{
     console.log(this.state)  
     return (          
       <div className={classes.Map}>                             
-        <Map 
-          loadOptions={this.props.loadOptions} 
+        <Map
+        minWidth="100px" 
+          width="100%" 
+          height="80vh"
           onAPIAvailable={(ymaps) => this.geocode(ymaps)} 
           center={[this.props.userCoordLat, this.props.userCoordLon]}
           zoom={15}>

@@ -13,18 +13,32 @@ class Near extends Component {
             'Нижний Тагил, ул. Ломоносова, 1',
             'Нижний Тагил, ул. Металлургов, 1',
             'Нижний Тагил, ул. Октябрьской революции, 1',
-            'Нижний Тагил, ул. Газетная, 1'
+            'Нижний Тагил, ул. Газетная, 1',
+            'Нижний Тагил, ул. Калинина, 1'
 
         ],
         loading: true
     }
     coords = () => {
-        navigator.geolocation.getCurrentPosition ( async (position) => {
+    
+         function error(errorCode) {
+            var msg = "";
+            switch (errorCode) {
+              case 1: msg = "Нет разрешения"; // Пользователь не дал разрешения на определение местоположения
+                break;
+              case 2: msg = "Техническая ошибка";
+                break;
+              case 3: msg = "Превышено время ожидания";
+                break;
+              default: msg = "Что то случилось не так";
+           }
+            alert(msg);
+         }
+        navigator.geolocation.getCurrentPosition((position)=>{
             this.setState({
                 userCoordLat: position.coords.latitude,
                 userCoordLon: position.coords.longitude
-            })
-        })     
+            })}, error, {enableHighAccuracy:true})     
     }
     
     componentWillMount(){
@@ -35,11 +49,7 @@ class Near extends Component {
           loading: false
         })
       }  
-    render(){
-        const loadOptions = {
-            lang: 'ru_RU',
-            apikey: '424e8338-02d6-4172-8698-59b1cd6343d4'            
-        }            
+    render(){  
         return (  
             this.state.loading ?
             <Loader />
@@ -47,7 +57,7 @@ class Near extends Component {
             <div className={classes.Near}>            
             <h1>Рядом</h1>            
                 <ContactMap 
-                    loadOptions ={loadOptions}
+                width="100%"
                     userCoordLat={this.state.userCoordLat}
                     userCoordLon={this.state.userCoordLon}
                     adress={this.state.adress}
