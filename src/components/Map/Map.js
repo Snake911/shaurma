@@ -1,63 +1,79 @@
 import React from 'react';
 import classes from './Map.css';
-import { Map, Marker } from 'yandex-map-react';
-import Loader from '../../components/UI/Loader/Loader';
+import { Map, Marker} from 'yandex-map-react';
 
-
+const coordinates=[];
+let userCoord = [];
 
 class ContactMap extends React.Component{    
-  state={
+  state = {
     coordinates: [],
-    loading: true
+    userLat:57.9114,
+    userLon: 59.9668
   }
-  
-
-  markerClickHandler(){
-    alert("Dczjkgjhg")
-  }
-
- 
-  geocode(ymaps) {
-    const coordinates=[];
-    let coords = []; 
-      this.props.adress.map(async (item, index)=>{
-      await ymaps.geocode(item)
-      .then(result => { coordinates[index] =  result.geoObjects.get(0).geometry.getCoordinates()})
-        coords.push(coordinates[index])
-        this.setState({coordinates: coords})
-      return true            
-    })  
- 
-  console.log(this.state)
-  }
-  renderMarkers() {    
-    const markers = this.state.coordinates.map((item, index) => {
-     return (<Marker onClick={this.markerClickHandler} key={index} lat={item[0]} lon={item[1]} />)
+  geocode(ymaps) { 
+     
+    const adress =[]
+    this.props.points.forEach(element => {
+      adress.push(element.adress);
+    });
+    adress.map(async (item, index)=>{
+       await ymaps.geocode(item)
+      .then(async result => await coordinates.push( result.geoObjects.get(0).geometry.getCoordinates()))                  
+      this.setState({coordinates})
     })
-
+    ymaps.geolocation.get({
+      // Зададим способ определения геолокации
+      // на основе ip пользователя.
+      //provider: 'yandex',
+      // Включим автоматическое геокодирование результата.
+       autoReverseGeocode: true
+  }).then(async (result) => {
+      await userCoord.push(result.geoObjects.get(0).geometry.getCoordinates());
+      console.log(userCoord)
+      this.setState({
+        userLat: userCoord[0][0],
+        userLon: userCoord[0][1]
+      })
+      console.log(this.state);
+  });
+  }
+  renderMarkers() {   
+    const markers = this.state.coordinates.map((item, index) => {
+     return (<Marker 
+     onClick={this.markerClickHandler} 
+     key={index} 
+     lat={item[0]} 
+     lon={item[1]} 
+     balloonState="closed" 
+     options={{preset:'islands#yellowFoodCircleIcon'}}
+     properties={{ balloonContentHeader: this.props.points[index].name, 
+     balloonContentBody: this.props.points[index].adress, 
+     balloonContentFooter:"Минимальная цена " + this.props.points[index].minPrice}}          
+      />)
+    })
     return markers;
   }
-  componentDidMount(){
-    this.setState({
-      loading: false
-    })
-  }  
-
-  render () {  
-    console.log(this.state)  
-    return (
-      this.state.loading ?
-      <Loader />
-      :          
+  
+   
+  render () { 
+    return (      
       <div className={classes.Map}>                             
         <Map
-        minWidth="100px" 
+          minWidth="100px" 
           width="100%" 
-          height="80vh"
+          height="90vh"         
           onAPIAvailable={(ymaps) => this.geocode(ymaps)} 
-          center={[this.props.userCoordLat, this.props.userCoordLon]}
+          loadOptions={{apikey: "424e8338-02d6-4172-8698-59b1cd6343d4"}}
+          center={[this.state.userLat, this.state.userLon]}
           zoom={15}>
           {this.renderMarkers()}
+        <Marker 
+          onClick={this.markerClickHandler} 
+          lat={this.state.userLat} 
+          lon={this.state.userLon}  
+          options={{preset:'islands#geolocationIcon'}}          
+          />
         </Map>          
       </div>            
     );

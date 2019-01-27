@@ -1,3 +1,8 @@
 .Map {
     margin: 0 auto;
 }
+.Map > div {
+    height:100%;
+    bottom: 0;
+    position: fixed !important;
+}
